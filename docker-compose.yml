@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ./logs:/app/logs
+    depends_on:
+      - database
+      - redis
+    networks:
+      - insighthub-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - insighthub-network
+
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - insighthub-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - insighthub-network
+
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./scheduler:/app
+    depends_on:
+      - backend
+      - database
+    networks:
+      - insighthub-network
+
+  ml-service:
+    build:
+      context: ./ml
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./ml:/app
+      - ml-models:/app/models
+    networks:
+      - insighthub-network
+
+volumes:
+  postgres-data:
+  redis-data:
+  ml-models:
+
+networks:
+  insighthub-network:
+    driver: bridge
