@@ -7,7 +7,7 @@ python-multipart==0.0.20
 sqlalchemy==2.0.41
 alembic==1.16.3
 aiosqlite==0.21.0
-asyncpg>=0.31.0
+asyncpg==0.31.0
 
 # ── Validation & settings ──────────────────────────────────────────────────────
 pydantic==2.13.4
