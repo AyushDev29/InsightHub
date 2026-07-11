@@ -44,13 +44,17 @@ class OpenMeteoService:
         """
         url = f"{base_url}{path}"
         last_exc: Exception | None = None
+        
+        logger.info(f"[{api_label}] Requesting URL: {url} with params: {params}")
 
         for attempt in range(1, settings.OPEN_METEO_MAX_RETRIES + 1):
             try:
                 async with httpx.AsyncClient(timeout=settings.OPEN_METEO_TIMEOUT) as client:
                     response = await client.get(url, params=params)
                     response.raise_for_status()
-                    return response.json()
+                    result = response.json()
+                    logger.debug(f"[{api_label}] Response keys: {list(result.keys())}")
+                    return result
             except httpx.HTTPStatusError as exc:
                 logger.warning(
                     f"[{api_label}] HTTP {exc.response.status_code} on attempt {attempt}: {exc}"
@@ -76,8 +80,7 @@ class OpenMeteoService:
         """
         Fetch current weather snapshot.
 
-        Uses Open-Meteo /forecast with `current_weather=true` and
-        a rich `current` variable list for detailed metrics.
+        Uses Open-Meteo /forecast with a rich `current` variable list for detailed metrics.
         """
         return await self._get(
             settings.OPEN_METEO_BASE_URL,
@@ -85,7 +88,7 @@ class OpenMeteoService:
             {
                 "latitude": latitude,
                 "longitude": longitude,
-                "current_weather": "true",
+                # NOTE: removed current_weather=true to avoid conflicts with current parameter
                 "current": (
                     "temperature_2m,relative_humidity_2m,"
                     "apparent_temperature,surface_pressure,"

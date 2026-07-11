@@ -98,11 +98,11 @@ async def get_current_weather(
         logger.error(str(exc))
         raise HTTPException(status_code=502, detail="Could not reach weather API. Please try again.")
 
-    # Open-Meteo returns two objects: current_weather (legacy) and current (detailed)
-    cw  = raw.get("current_weather", {})
+    # Open-Meteo now returns: current_units, current (detailed)
+    # (legacy current_weather object removed from request)
     cur = raw.get("current", {})
 
-    weather_code = cur.get("weather_code") or cw.get("weathercode")
+    weather_code = cur.get("weather_code")
 
     return {
         "success": True,
@@ -111,7 +111,7 @@ async def get_current_weather(
             "latitude":         latitude,
             "longitude":        longitude,
             # Temperatures
-            "temperature":              cur.get("temperature_2m")    or cw.get("temperature"),
+            "temperature":              cur.get("temperature_2m"),
             "feels_like":               cur.get("apparent_temperature"),
             # Atmosphere
             "humidity":                 cur.get("relative_humidity_2m"),
@@ -119,9 +119,9 @@ async def get_current_weather(
             "visibility":               cur.get("visibility"),
             "cloudiness":               cur.get("cloud_cover"),
             # Wind
-            "wind_speed":               cur.get("wind_speed_10m")     or cw.get("windspeed"),
-            "wind_direction_deg":       cur.get("wind_direction_10m") or cw.get("winddirection"),
-            "wind_direction_label":     wind_direction_label(cur.get("wind_direction_10m") or cw.get("winddirection")),
+            "wind_speed":               cur.get("wind_speed_10m"),
+            "wind_direction_deg":       cur.get("wind_direction_10m"),
+            "wind_direction_label":     wind_direction_label(cur.get("wind_direction_10m")),
             "wind_gust":                cur.get("wind_gusts_10m"),
             # Precipitation
             "precipitation":            cur.get("precipitation"),
@@ -131,8 +131,8 @@ async def get_current_weather(
             "weather_code":             weather_code,
             "weather_description":      describe_wmo(weather_code),
             # Meta
-            "observation_time":         cur.get("time") or cw.get("time"),
-            "is_day":                   bool(cw.get("is_day", 1)),
+            "observation_time":         cur.get("time"),
+            "is_day":                   1,  # Placeholder: is_day not in current response
             "units": {
                 "temperature":  "°C",
                 "wind_speed":   "m/s",
