@@ -80,6 +80,8 @@ async def init_db() -> None:
     """
     Create all tables on startup (development only).
     In production, always use Alembic migrations.
+    
+    If database is not available, log warning but don't crash.
     """
     try:
         from app.models import location, weather, forecast, aqi, logs  # noqa: F401
@@ -87,12 +89,15 @@ async def init_db() -> None:
         async with engine.begin() as conn:
             logger.info("Creating / verifying database tables...")
             await conn.run_sync(Base.metadata.create_all)
-            logger.info("Database tables ready.")
+            logger.info("✔  Database tables ready.")
 
-        logger.info("Database initialised successfully.")
+        logger.info("✔  Database initialised successfully.")
     except Exception as exc:
-        logger.error(f"Database initialisation failed: {exc}")
-        raise
+        logger.error(f"⚠  Database initialisation warning: {exc}")
+        logger.error(f"   Make sure DATABASE_URL is set correctly in environment variables.")
+        logger.error(f"   Current DATABASE_URL: {settings.DATABASE_URL.split('@')[-1] if '@' in settings.DATABASE_URL else 'not set'}")
+        # Don't re-raise - let app continue (API might still work)
+        # raise
 
 
 async def close_db() -> None:
