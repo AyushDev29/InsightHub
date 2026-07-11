@@ -339,6 +339,55 @@ docker-compose logs database
 
 ---
 
+### CORS & Port Issues (New!)
+
+**Issue**: `Failed to load data. Is the backend running?` in Frontend
+
+**Root Cause**: Frontend running on unexpected port (e.g., 5174) but backend's CORS whitelist only allows 5173
+
+**Solution 1 - Use Clean Start Script (Recommended)**:
+```bash
+# Windows - Double-click this file:
+scripts/dev-clean.bat
+
+# Or from command line:
+cd scripts
+dev-clean.bat
+
+# Windows PowerShell:
+.\dev-clean.ps1
+```
+
+**Solution 2 - Manual Cleanup**:
+```bash
+# Windows - Kill existing processes
+taskkill /IM node.exe /F
+taskkill /IM python.exe /F
+
+# Wait 2 seconds
+timeout /t 2
+
+# Then start normally
+cd backend && python -m uvicorn app.main:app --reload
+# In another terminal:
+cd frontend && npm run dev
+```
+
+**Solution 3 - Check Port Usage**:
+```bash
+# Windows - See what's using port 5173
+netstat -ano | findstr :5173
+
+# Kill by Process ID
+taskkill /PID <PID> /F
+```
+
+**Prevention**: The CORS whitelist now includes ports 5173-5175 to handle automatic fallback. If Vite can't use 5173, it will use 5174 or 5175, and the backend will accept requests from all three ports.
+
+For detailed explanation, see: [CORS_SOLUTION.md](CORS_SOLUTION.md)
+
+---
+
 ## Development Workflow
 
 ### Daily Development
