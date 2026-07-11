@@ -1,12 +1,10 @@
-# Implementation Tasks
+# Implementation Plan: Phase B Weather & Air Quality Pages
 
-## Task Structure
+## Overview
 
-This document breaks Phase B requirements and design into concrete, sequenced implementation tasks.
+This document breaks Phase B requirements and design into concrete, sequenced implementation tasks with dependencies and time estimates.
 
----
-
-## Phase B: Weather & Air Quality Pages
+## Tasks
 
 ### TASK-01: Create Weather Page Components - Part 1
 **Type:** Feature Development  
@@ -17,13 +15,13 @@ This document breaks Phase B requirements and design into concrete, sequenced im
 Create the Weather page entry point and CurrentWeather component. This establishes the page structure and initial data fetching patterns.
 
 **Acceptance Criteria:**
-- [ ] `Weather.tsx` page created with routing
-- [ ] Header with CitySelector and refresh button
-- [ ] CurrentWeather component displays all 6 metrics
-- [ ] Data refreshes every 5 minutes
-- [ ] Responsive on mobile
-- [ ] No console errors
-- [ ] TypeScript strict mode passes
+- [ ] 1. `Weather.tsx` page created with routing
+- [ ] 2. Header with CitySelector and refresh button
+- [ ] 3. CurrentWeather component displays all 6 metrics
+- [ ] 4. Data refreshes every 5 minutes
+- [ ] 5. Responsive on mobile
+- [ ] 6. No console errors
+- [ ] 7. TypeScript strict mode passes
 
 **Files to Create:**
 - `frontend/src/pages/Weather.tsx` (NEW)
@@ -43,13 +41,13 @@ Create the Weather page entry point and CurrentWeather component. This establish
 Build the 48-hour hourly forecast and 16-day daily forecast components with Recharts visualizations.
 
 **Acceptance Criteria:**
-- [ ] HourlyForecast component with 4 interactive charts
-- [ ] DailyForecast component with horizontal card grid
-- [ ] All charts display correct data
-- [ ] Charts render without lag
-- [ ] Hover tooltips show exact values
-- [ ] Mobile responsive
-- [ ] Unit toggle working (C/F, m/s/mph)
+- [ ] 1. HourlyForecast component with 4 interactive charts
+- [ ] 2. DailyForecast component with horizontal card grid
+- [ ] 3. All charts display correct data
+- [ ] 4. Charts render without lag
+- [ ] 5. Hover tooltips show exact values for each hour
+- [ ] 6. Mobile responsive
+- [ ] 7. Unit toggle working (C/F, m/s/mph)
 
 **Files to Create:**
 - `frontend/src/components/weather/HourlyForecast.tsx` (NEW)
@@ -70,12 +68,12 @@ Build the 48-hour hourly forecast and 16-day daily forecast components with Rech
 Build reusable date range picker and multi-city selector components used across Weather and Air Quality pages.
 
 **Acceptance Criteria:**
-- [ ] DateRangePicker with calendar UI
-- [ ] Preset shortcuts (Last 7, 30, 90 days)
-- [ ] CitySelector supports 1 or 2-3 cities
-- [ ] Form validation works
-- [ ] TypeScript types defined
-- [ ] No date validation bugs
+- [ ] 1. DateRangePicker with calendar UI
+- [ ] 2. Preset shortcuts (Last 7, 30, 90 days)
+- [ ] 3. CitySelector supports 1 or 2-3 cities
+- [ ] 4. Form validation works
+- [ ] 5. TypeScript types defined
+- [ ] 6. No date validation bugs
 
 **Files to Create:**
 - `frontend/src/components/shared/DateRangePicker.tsx` (NEW)
@@ -92,13 +90,13 @@ Build reusable date range picker and multi-city selector components used across 
 Build historical weather data component with trend charts and data export.
 
 **Acceptance Criteria:**
-- [ ] Date range picker controls work
-- [ ] Temperature trend chart displays correctly
-- [ ] Precipitation trend chart displays correctly
-- [ ] CSV export button functional
-- [ ] Validates date range (max 30 days)
-- [ ] Loading states shown
-- [ ] Error handling for API failures
+- [ ] 1. Date range picker controls work
+- [ ] 2. Temperature trend chart displays correctly
+- [ ] 3. Precipitation trend chart displays correctly
+- [ ] 4. CSV export button functional
+- [ ] 5. Validates date range (max 30 days)
+- [ ] 6. Loading states shown
+- [ ] 7. Error handling for API failures
 
 **Files to Create:**
 - `frontend/src/components/weather/HistoricalChart.tsx` (NEW)
@@ -118,12 +116,12 @@ Build historical weather data component with trend charts and data export.
 Build multi-city weather comparison view with side-by-side metrics and overlay charts.
 
 **Acceptance Criteria:**
-- [ ] CitySelector allows choosing 2-3 cities
-- [ ] Metrics table shows all cities side-by-side
-- [ ] Temperature overlay chart works correctly
-- [ ] Comparison statistics calculated
-- [ ] Mobile responsive
-- [ ] Can add/remove cities dynamically
+- [ ] 1. CitySelector allows choosing 2-3 cities
+- [ ] 2. Metrics table shows all cities side-by-side
+- [ ] 3. Temperature overlay chart works correctly
+- [ ] 4. Comparison statistics calculated
+- [ ] 5. Mobile responsive
+- [ ] 6. Can add/remove cities dynamically
 
 **Files to Create:**
 - `frontend/src/components/weather/ComparisonView.tsx` (NEW)
@@ -142,11 +140,11 @@ Build multi-city weather comparison view with side-by-side metrics and overlay c
 Build weather statistics and insights component displaying calculated metrics.
 
 **Acceptance Criteria:**
-- [ ] 6 statistic cards render correctly
-- [ ] All calculations are accurate
-- [ ] Data updates with new API calls
-- [ ] Mobile responsive
-- [ ] Proper number formatting
+- [ ] 1. 6 statistic cards render correctly
+- [ ] 2. All calculations are accurate
+- [ ] 3. Data updates with new API calls
+- [ ] 4. Mobile responsive
+- [ ] 5. Proper number formatting
 
 **Files to Create:**
 - `frontend/src/components/weather/WeatherStats.tsx` (NEW)
@@ -165,13 +163,13 @@ Build weather statistics and insights component displaying calculated metrics.
 Create Air Quality page entry point and AQIOverview component showing current AQI with health recommendations.
 
 **Acceptance Criteria:**
-- [ ] `AirQuality.tsx` page created with routing
-- [ ] AQIOverview component displays large AQI score
-- [ ] Category badge with color coding
-- [ ] Health recommendations displayed
-- [ ] Last update time shown
-- [ ] Responsive on mobile
-- [ ] All metrics display correctly
+- [ ] 1. `AirQuality.tsx` page created with routing
+- [ ] 2. AQIOverview component displays large AQI score
+- [ ] 3. Category badge with color coding
+- [ ] 4. Health recommendations displayed
+- [ ] 5. Last update time shown
+- [ ] 6. Responsive on mobile
+- [ ] 7. All metrics display correctly
 
 **Files to Create:**
 - `frontend/src/pages/AirQuality.tsx` (NEW)
@@ -191,12 +189,12 @@ Create Air Quality page entry point and AQIOverview component showing current AQ
 Build pollutant breakdown component showing 6 pollutants with sparkline trends.
 
 **Acceptance Criteria:**
-- [ ] All 6 pollutants display correctly
-- [ ] WHO guideline comparisons shown
-- [ ] Sparklines show 24h trends
-- [ ] Color coding correct (green/red)
-- [ ] Health impact categories displayed
-- [ ] Responsive on mobile
+- [ ] 1. All 6 pollutants display correctly
+- [ ] 2. WHO guideline comparisons shown
+- [ ] 3. Sparklines show 24h trends
+- [ ] 4. Color coding correct (green/red)
+- [ ] 5. Health impact categories displayed
+- [ ] 6. Responsive on mobile
 
 **Files to Create:**
 - `frontend/src/components/airquality/PollutantBreakdown.tsx` (NEW)
@@ -215,13 +213,13 @@ Build pollutant breakdown component showing 6 pollutants with sparkline trends.
 Build historical AQI data component and AQI trends component with trend analysis.
 
 **Acceptance Criteria:**
-- [ ] Historical AQI chart displays data correctly
-- [ ] Date range picker controls work
-- [ ] 7-day trend chart accurate
-- [ ] 30-day trend chart accurate
-- [ ] Trend statistics calculated
-- [ ] CSV export functional
-- [ ] Loading states shown
+- [ ] 1. Historical AQI chart displays data correctly
+- [ ] 2. Date range picker controls work
+- [ ] 3. 7-day trend chart accurate
+- [ ] 4. 30-day trend chart accurate
+- [ ] 5. Trend statistics calculated
+- [ ] 6. CSV export functional
+- [ ] 7. Loading states shown
 
 **Files to Create:**
 - `frontend/src/components/airquality/HistoricalAQI.tsx` (NEW)
@@ -242,12 +240,12 @@ Build historical AQI data component and AQI trends component with trend analysis
 Build pollutant comparison (vs WHO guidelines) and health recommendations components.
 
 **Acceptance Criteria:**
-- [ ] WHO guidelines comparison displays correctly
-- [ ] Color coding for exceeded limits
-- [ ] Health recommendations rendered
-- [ ] Activity recommendations clear
-- [ ] Mask recommendations accurate
-- [ ] Vulnerable group warnings shown
+- [ ] 1. WHO guidelines comparison displays correctly
+- [ ] 2. Color coding for exceeded limits
+- [ ] 3. Health recommendations rendered
+- [ ] 4. Activity recommendations clear
+- [ ] 5. Mask recommendations accurate
+- [ ] 6. Vulnerable group warnings shown
 
 **Files to Create:**
 - `frontend/src/components/airquality/PollutantComparison.tsx` (NEW)
@@ -267,13 +265,13 @@ Build pollutant comparison (vs WHO guidelines) and health recommendations compon
 Build city ranking component showing all 7 cities ranked by AQI with sorting.
 
 **Acceptance Criteria:**
-- [ ] All 7 cities display in ranking
-- [ ] Sorting by AQI works
-- [ ] Color coding correct
-- [ ] Trend arrows display
-- [ ] Medals show for top 3
-- [ ] Real-time updates
-- [ ] Mobile responsive
+- [ ] 1. All 7 cities display in ranking
+- [ ] 2. Sorting by AQI works
+- [ ] 3. Color coding correct
+- [ ] 4. Trend arrows display
+- [ ] 5. Medals show for top 3
+- [ ] 6. Real-time updates
+- [ ] 7. Mobile responsive
 
 **Files to Create:**
 - `frontend/src/components/airquality/CityRanking.tsx` (NEW)
@@ -292,15 +290,15 @@ Build city ranking component showing all 7 cities ranked by AQI with sorting.
 Test all functionality, fix bugs, ensure accessibility and performance.
 
 **Acceptance Criteria:**
-- [ ] All pages load < 2 seconds
-- [ ] No console errors
-- [ ] Mobile responsive on all breakpoints
-- [ ] All charts render smoothly
-- [ ] Data refresh working (5-15 min intervals)
-- [ ] No broken links
-- [ ] WCAG AA accessibility check passed
-- [ ] No API rate limiting issues
-- [ ] All required data displays
+- [ ] 1. All pages load < 2 seconds
+- [ ] 2. No console errors
+- [ ] 3. Mobile responsive on all breakpoints
+- [ ] 4. All charts render smoothly
+- [ ] 5. Data refresh working (5-15 min intervals)
+- [ ] 6. No broken links
+- [ ] 7. WCAG AA accessibility check passed
+- [ ] 8. No API rate limiting issues
+- [ ] 9. All required data displays
 
 **Test Scenarios:**
 1. Load each page and verify all sections present
@@ -323,12 +321,12 @@ Test all functionality, fix bugs, ensure accessibility and performance.
 Create component documentation, update README, prepare for Phase C.
 
 **Acceptance Criteria:**
-- [ ] Component usage documentation created
-- [ ] README updated with new pages
-- [ ] Installation/setup instructions updated
-- [ ] GitHub README has screenshots
-- [ ] All commits have clear messages
-- [ ] No uncommitted changes
+- [ ] 1. Component usage documentation created
+- [ ] 2. README updated with new pages
+- [ ] 3. Installation/setup instructions updated
+- [ ] 4. GitHub README has screenshots
+- [ ] 5. All commits have clear messages
+- [ ] 6. No uncommitted changes
 
 **Files to Create/Modify:**
 - `COMPONENT_DOCUMENTATION.md` (NEW)
@@ -337,25 +335,41 @@ Create component documentation, update README, prepare for Phase C.
 
 ---
 
-## Task Sequencing
+## Task Dependency Graph
 
-### Sequential Dependency Graph
-```
-TASK-01 (Weather setup)
-  ├─ TASK-02 (Forecast charts)
-  │   └─ TASK-03 (Shared components)
-  │       ├─ TASK-04 (Historical weather)
-  │       │   └─ TASK-05 (Comparison)
-  │       │       └─ TASK-06 (Weather stats)
-  │
-  ├─ TASK-07 (AirQuality setup)
-  │   ├─ TASK-08 (Pollutant breakdown)
-  │   │   └─ TASK-09 (Historical & trends)
-  │   │       └─ TASK-10 (Comparison & health)
-  │   │           └─ TASK-11 (City ranking)
-  │   │
-  │   └─ TASK-12 (QA & Testing)
-  │       └─ TASK-13 (Documentation)
+```json
+{
+  "waves": [
+    {
+      "wave": 1,
+      "tasks": ["TASK-01", "TASK-03", "TASK-07"]
+    },
+    {
+      "wave": 2,
+      "tasks": ["TASK-02", "TASK-04", "TASK-08"]
+    },
+    {
+      "wave": 3,
+      "tasks": ["TASK-05", "TASK-09"]
+    },
+    {
+      "wave": 4,
+      "tasks": ["TASK-06", "TASK-10"]
+    },
+    {
+      "wave": 5,
+      "tasks": ["TASK-11"]
+    },
+    {
+      "wave": 6,
+      "tasks": ["TASK-12"]
+    },
+    {
+      "wave": 7,
+      "tasks": ["TASK-13"]
+    }
+  ]
+}
 ```
 
 ### Suggested Implementation Order
@@ -457,6 +471,30 @@ This allows staging before full rollout.
 - **Before:** 60-65% complete (Phase A done)
 - **After:** 75-80% complete (Phase B done)
 - **Remaining:** 20-25% (Phase C Analytics + Phase D Maps)
+
+---
+
+## Notes
+
+### Development Guidelines
+1. **TypeScript:** All code must pass strict type checking
+2. **Testing:** Verify each component with manual testing before considering complete
+3. **Git Commits:** Create meaningful commits after each task completion
+4. **Code Review:** Ensure consistent patterns with existing Dashboard components
+5. **Performance:** Monitor page load times and chart rendering speed
+
+### Common Pitfalls to Avoid
+- Don't add new npm dependencies (all tools already available)
+- Don't modify database schema (using existing tables)
+- Don't break Phase A existing functionality (dashboard must still work)
+- Don't skip mobile testing (responsive design required)
+- Don't commit without verifying no console errors
+
+### Time Estimates Rationale
+- Component creation: 2-5 hours per component (includes type definitions)
+- Testing & QA: 4 hours (verification of all functionality)
+- Documentation: 2 hours (component docs + README updates)
+- Buffer not included (scope is fairly well-defined)
 
 ---
 

@@ -1,21 +1,14 @@
 # Design Document
 
-## Introduction
+## Overview
 
 This design document provides the technical architecture and component structure for implementing Phase B requirements. It translates business requirements into concrete implementation details.
 
-## Table of Contents
+## Architecture
 
-1. [Architecture Overview](#architecture-overview)
-2. [Weather Page Design](#weather-page-design)
-3. [Air Quality Page Design](#air-quality-page-design)
-4. [Shared Components](#shared-components)
-5. [Data Flow](#data-flow)
-6. [Component Hierarchy](#component-hierarchy)
+### Architecture Overview
 
----
-
-## Architecture Overview
+This document defines the component architecture, data models, and integration patterns for Phase B.
 
 ### File Structure
 
@@ -56,6 +49,10 @@ frontend/src/
 └── types/
     └── api.ts                (existing - may need extension)
 ```
+
+## Components and Interfaces
+
+All components are built using React 19 with TypeScript strict mode. The following interfaces define the contract for each component.
 
 ---
 
@@ -457,6 +454,55 @@ interface ChartTooltipProps {
 
 ---
 
+## Data Models
+
+### Weather Data Model
+```typescript
+interface WeatherData {
+  temperature: number
+  feelsLike: number
+  humidity: number
+  pressure: number
+  visibility: number
+  uvIndex: number
+  cloudCover: number
+  windSpeed: number
+  windDirection: number
+  windGust: number
+  precipitation: number
+  description: string
+  timestamp: Date
+}
+```
+
+### AQI Data Model
+```typescript
+interface AQIData {
+  aqi: number
+  pm25: number
+  pm10: number
+  no2: number
+  so2: number
+  co: number
+  o3: number
+  category: 'good' | 'fair' | 'moderate' | 'poor' | 'very_poor' | 'extremely_poor'
+  timestamp: Date
+}
+```
+
+### Historical Data Model
+```typescript
+interface HistoricalRecord {
+  date: Date
+  temperature: {min: number, max: number, mean: number}
+  precipitation: number
+  windDirection: string
+  aqi?: number
+}
+```
+
+---
+
 ## Data Flow
 
 ### Weather Page Data Flow
@@ -597,6 +643,88 @@ AQI Categories:
 ### New Queries Needed
 - Historical AQI: Query Supabase AQI table for trends
 - City comparison: Multiple concurrent `/weather/current` calls
+
+---
+
+## Correctness Properties
+
+### Property 1: Data Validation Rules
+**Validates: REQ-T-01, REQ-T-02**
+
+- All temperature values must be within -50°C to 60°C range
+- Humidity values must be 0-100%
+- Pressure values must be 900-1100 hPa
+- Wind speeds must be >= 0 m/s
+- AQI values must be 0-500
+- All timestamps must be valid ISO 8601 format
+
+### Property 2: Component Rendering Rules
+**Validates: REQ-W-01, REQ-W-02, REQ-W-03, REQ-A-01, REQ-A-02**
+
+- All chart data must be sorted chronologically
+- Missing data points must be marked or interpolated
+- Unit conversions must be consistent (°C/°F, m/s/mph)
+- Color coding must be accessible (sufficient contrast ratio)
+
+---
+
+## Error Handling
+
+### API Error Handling
+- Network timeouts: Display retry button, use cached data if available
+- Invalid responses: Log error, show generic "data unavailable" message
+- Rate limiting (429): Implement exponential backoff, queue requests
+- Server errors (5xx): Retry after 30 seconds, max 3 attempts
+
+### Data Error Handling
+- Missing required fields: Use sensible defaults or omit section
+- Invalid dates: Validate and skip malformed records
+- Extreme outliers: Flag with warning but display value
+- Stale data: Show timestamp, add "data not updated" indicator
+
+### Component Error Boundaries
+- Wrap each major section with React Error Boundary
+- Display fallback UI on component crash
+- Log errors to console and analytics
+
+---
+
+## Testing Strategy
+
+### Unit Tests
+- Component props validation
+- Data transformation functions
+- Utility functions (calculations, formatting)
+- Hook logic (useWeather, useAQITrends, etc.)
+
+### Integration Tests
+- Page load sequence
+- Data fetching and rendering
+- Component interactions (city selector, date picker)
+- Chart interactivity (hover, tooltips)
+
+### E2E Tests
+- Full user workflows
+- Page navigation and routing
+- Real API calls (staging environment)
+
+### Performance Tests
+- Page load time < 2 seconds
+- Chart render time < 500ms
+- No memory leaks on component unmount
+- Battery impact on mobile (lower priority)
+
+### Accessibility Tests
+- WCAG AA color contrast (4.5:1 text, 3:1 large text)
+- Keyboard navigation through all components
+- Screen reader compatibility
+- Focus management
+
+### Mobile Tests
+- Responsive layout on 375px (iPhone SE)
+- Responsive layout on 768px (iPad)
+- Touch interactions work correctly
+- Performance on 4G network simulation
 
 ---
 
