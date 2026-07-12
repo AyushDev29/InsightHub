@@ -9,6 +9,7 @@ interface SidebarProps {
 const menuItems = [
   { icon: Gauge, label: 'Dashboard', href: '/', end: true },
   { icon: Cloud, label: 'Weather', href: '/weather', end: false },
+  { icon: Cloud, label: 'Air Quality', href: '/air-quality', end: false },
   { icon: BarChart3, label: 'Analytics', href: '/analytics', end: false },
   { icon: Map, label: 'Maps', href: '/maps', end: false },
   { icon: Cloud, label: 'Data Explorer', href: '/data-explorer', end: false },
