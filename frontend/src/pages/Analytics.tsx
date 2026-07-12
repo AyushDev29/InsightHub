@@ -8,6 +8,7 @@ import { useState, useMemo } from 'react'
 import { BarChart3, TrendingUp, AlertTriangle, Zap, Zap as Spark } from 'lucide-react'
 import TrendAnalysis from '../components/analytics/TrendAnalysis'
 import AnomalyDetector from '../components/analytics/AnomalyDetector'
+import PredictiveInsights from '../components/analytics/PredictiveInsights'
 
 interface Tab {
   id: string
@@ -82,21 +83,7 @@ export default function Analytics() {
 
       case 'predictions':
         return (
-          <div className="space-y-4">
-            <div className="card p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Spark className="text-purple-400" size={20} />
-                <h3 className="text-lg font-semibold text-white">Predictive Insights</h3>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Forecasting for: <span className="text-primary-400 font-medium">{cities}</span>
-              </p>
-              <div className="bg-dark-700/50 rounded border border-dark-600 p-8 text-center">
-                <p className="text-gray-500 mb-4">🔮 Prediction component loading...</p>
-                <p className="text-xs text-gray-600">7-day temperature forecast, AQI trends, and activity recommendations</p>
-              </div>
-            </div>
-          </div>
+          <PredictiveInsights cities={selectedCities} timeframe="7days" />
         )
 
       case 'patterns':
