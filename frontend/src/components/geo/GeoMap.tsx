@@ -173,7 +173,6 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     <div
       id="geo-map"
       className="w-full h-full bg-gray-100 rounded-lg overflow-hidden"
-      style={{ minHeight: '400px' }}
     />
   )
 }

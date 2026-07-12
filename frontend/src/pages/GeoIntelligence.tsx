@@ -189,66 +189,74 @@ export const GeoIntelligence: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[280px_1fr_320px] gap-4 h-[calc(100vh-120px)]">
-      {/* LEFT SIDEBAR - CONTROLS */}
-      <div className="flex flex-col gap-4 overflow-y-auto pb-4">
-        {/* Country Selector */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
-            Country
-          </label>
-          <CountrySelector
-            selectedCountry={country}
-            onCountryChange={setCountry}
-          />
-        </div>
-
-        {/* Search Bar */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-          <SearchBar
-            cities={cities}
-            onCitySelect={city => {
-              setSelectedCity(city)
-              // Map zoom would be triggered here
-            }}
-          />
-        </div>
-
-        {/* Layer Controls */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 block">
-            Layers
-          </label>
-          <LayerControls
-            layers={layers}
-            onLayerToggle={handleLayerToggle}
-          />
-        </div>
-
-        {/* Timeline Slider */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 block">
-            Timeline
-          </label>
-          <TimelineSlider
-            currentTime={currentTime}
-            onTimeChange={setCurrentTime}
-          />
-        </div>
-
-        {/* Legend */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 block">
-            Legend
-          </label>
-          <MapLegend layer={activeLayer} />
+    <div className="flex flex-col h-screen w-screen bg-dark-900 gap-4 p-4">
+      {/* Top bar with title */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white">🗺️ Geo Intelligence</h1>
+        <div className="text-sm text-gray-400">
+          {currentTime} IST
         </div>
       </div>
 
-      {/* CENTER - MAP */}
-      <div className="bg-dark-800 border border-dark-600 rounded-lg overflow-hidden shadow-lg">
-        <div className="w-full h-full">
-        <GeoMap
+      {/* Main grid */}
+      <div className="grid grid-cols-[280px_1fr_300px] gap-4 flex-1 min-h-0">
+        {/* LEFT SIDEBAR */}
+        <div className="flex flex-col gap-3 bg-dark-800 border border-dark-600 rounded-lg p-4 overflow-y-auto">
+          {/* Country */}
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase mb-2 block">
+              Country
+            </label>
+            <CountrySelector
+              selectedCountry={country}
+              onCountryChange={setCountry}
+            />
+          </div>
+
+          {/* Search */}
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase mb-2 block">
+              Search
+            </label>
+            <SearchBar
+              cities={cities}
+              onCitySelect={city => {
+                setSelectedCity(city)
+              }}
+            />
+          </div>
+
+          {/* Layers */}
+          <div className="pt-2 border-t border-dark-600">
+            <label className="text-xs font-semibold text-gray-400 uppercase mb-2 block">
+              Layers
+            </label>
+            <LayerControls
+              layers={layers}
+              onLayerToggle={handleLayerToggle}
+            />
+          </div>
+
+          {/* Timeline */}
+          <div className="pt-2 border-t border-dark-600">
+            <label className="text-xs font-semibold text-gray-400 uppercase mb-2 block">
+              Timeline
+            </label>
+            <TimelineSlider
+              currentTime={currentTime}
+              onTimeChange={setCurrentTime}
+            />
+          </div>
+
+          {/* Legend */}
+          <div className="pt-2 border-t border-dark-600">
+            <MapLegend layer={activeLayer} />
+          </div>
+        </div>
+
+        {/* CENTER MAP */}
+        <div className="bg-dark-800 border border-dark-600 rounded-lg overflow-hidden">
+          <GeoMap
             cities={cities}
             activeLayer={activeLayer}
             showHeatmap={showHeatmap}
@@ -257,45 +265,34 @@ export const GeoIntelligence: React.FC = () => {
             onMarkerClick={setSelectedCity}
           />
         </div>
-      </div>
 
-      {/* RIGHT SIDEBAR - ANALYTICS & DETAILS */}
-      <div className="flex flex-col gap-4 overflow-y-auto pb-4">
-      {/* Selected City Details */}
-        {selectedCity && (
-          <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-            <div className="flex justify-between items-start mb-3">
-              <h3 className="font-semibold text-white">City Details</h3>
-              <button
-                onClick={() => setSelectedCity(null)}
-                className="text-gray-400 hover:text-white text-lg"
-              >
-                ✕
-              </button>
+        {/* RIGHT SIDEBAR */}
+        <div className="flex flex-col gap-3 bg-dark-800 border border-dark-600 rounded-lg p-4 overflow-y-auto">
+          {/* City Details */}
+          {selectedCity && (
+            <div className="pb-3 border-b border-dark-600">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-semibold text-white text-sm">Selected: {selectedCity.name}</h3>
+                <button
+                  onClick={() => setSelectedCity(null)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+              <MarkerPopup
+                city={selectedCity}
+                onClose={() => setSelectedCity(null)}
+              />
             </div>
-            <MarkerPopup
-              city={selectedCity}
-              onClose={() => setSelectedCity(null)}
-            />
-          </div>
-        )}
+          )}
 
-        {/* Analytics Panel */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4 flex-1 overflow-y-auto">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 block">
-            Analytics
-          </label>
-          <AnalyticsPanel cities={cities} />
-        </div>
-
-        {/* Time Display */}
-        <div className="bg-dark-800 border border-dark-600 rounded-lg p-4">
-          <div className="text-center">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Current Time</p>
-            <p className="text-2xl font-bold text-primary-400">{currentTime} IST</p>
-            <p className="text-xs text-gray-500 mt-2">
-              {currentTime === '13:00' ? 'Current' : 'Simulated'}
-            </p>
+          {/* Analytics */}
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase mb-2 block">
+              Analytics
+            </label>
+            <AnalyticsPanel cities={cities} />
           </div>
         </div>
       </div>
