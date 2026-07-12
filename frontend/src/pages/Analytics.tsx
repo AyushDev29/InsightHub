@@ -5,11 +5,13 @@
  */
 
 import { useState, useMemo } from 'react'
-import { BarChart3, TrendingUp, AlertTriangle, Zap, Zap as Spark } from 'lucide-react'
+import { BarChart3, TrendingUp, AlertTriangle, Zap, Zap as Spark, BarChart } from 'lucide-react'
 import TrendAnalysis from '../components/analytics/TrendAnalysis'
 import AnomalyDetector from '../components/analytics/AnomalyDetector'
 import PredictiveInsights from '../components/analytics/PredictiveInsights'
 import PatternRecognition from '../components/analytics/PatternRecognition'
+import ComparisonAnalytics from '../components/analytics/ComparisonAnalytics'
+import StatisticsDashboard from '../components/analytics/StatisticsDashboard'
 
 interface Tab {
   id: string
@@ -23,6 +25,8 @@ const TABS: Tab[] = [
   { id: 'anomalies', label: 'Anomalies', icon: <AlertTriangle size={18} />, color: 'text-orange-400' },
   { id: 'predictions', label: 'Predictions', icon: <Spark size={18} />, color: 'text-purple-400' },
   { id: 'patterns', label: 'Patterns', icon: <Zap size={18} />, color: 'text-green-400' },
+  { id: 'comparisons', label: 'Comparisons', icon: <BarChart size={18} />, color: 'text-cyan-400' },
+  { id: 'statistics', label: 'Statistics', icon: <BarChart3 size={18} />, color: 'text-pink-400' },
 ]
 
 // Default Indian cities coordinates
@@ -88,6 +92,16 @@ export default function Analytics() {
       case 'patterns':
         return (
           <PatternRecognition cities={selectedCities} />
+        )
+
+      case 'comparisons':
+        return (
+          <ComparisonAnalytics cities={selectedCities} />
+        )
+
+      case 'statistics':
+        return (
+          <StatisticsDashboard cities={selectedCities} />
         )
 
       default:
