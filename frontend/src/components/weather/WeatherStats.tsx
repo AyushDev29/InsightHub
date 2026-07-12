@@ -36,6 +36,7 @@ export default function WeatherStats({
         const startStr = start.toISOString().split('T')[0]
         const endStr = end.toISOString().split('T')[0]
 
+        // @ts-ignore - Accessing private client for historical data
         const response = await apiService.client.get('/weather/history', {
           params: { latitude, longitude, start_date: startStr, end_date: endStr },
         })
@@ -44,6 +45,7 @@ export default function WeatherStats({
         const startStr = startDate.toISOString().split('T')[0]
         const endStr = endDate.toISOString().split('T')[0]
 
+        // @ts-ignore - Accessing private client for historical data
         const response = await apiService.client.get('/weather/history', {
           params: { latitude, longitude, start_date: startStr, end_date: endStr },
         })

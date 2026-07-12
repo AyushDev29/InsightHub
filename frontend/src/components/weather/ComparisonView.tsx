@@ -139,8 +139,8 @@ export default function ComparisonView() {
   }
 
   const validCities = selectedCityIds
-    .map((id) => ({ id, data: weatherData[id] }))
-    .filter((c) => c.data !== null)
+    .map((id) => ({ id, data: weatherData?.[id] }))
+    .filter((c) => c.data !== null && c.data !== undefined) as Array<{ id: string; data: any }>
 
   return (
     <div className="space-y-6">
@@ -190,7 +190,8 @@ export default function ComparisonView() {
                       key={c.id}
                       className="px-4 py-3 text-white font-medium text-right"
                     >
-                      {metric.format((c.data as any)[metric.key])}
+                      {/* @ts-ignore - Type narrowing issue with optional chaining */}
+                      {c.data && metric.format((c.data as any)[metric.key])}
                     </td>
                   ))}
                 </tr>

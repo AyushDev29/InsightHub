@@ -31,7 +31,8 @@ export default function PredictionCard({
   uncertainty = 2,
 }: PredictionCardProps) {
   const change = predictedValue - currentValue
-  const changePercent = ((change / currentValue) * 100).toFixed(1)
+  const changePercentValue = (change / currentValue) * 100
+  const changePercent = changePercentValue.toFixed(1)
   const isImprovement = (metric.includes('AQI') || metric.includes('Temp')) && change < 0 || !metric.includes('AQI') && change > 0
 
   const directionIcon = direction === 'up' ? '↗️' : direction === 'down' ? '↘️' : '→'
@@ -64,7 +65,7 @@ export default function PredictionCard({
         <div>
           <p className="text-xs text-gray-500 uppercase">Change</p>
           <p className={`text-lg font-bold ${isImprovement ? 'text-green-400' : 'text-red-400'}`}>
-            {changePercent > 0 ? '+' : ''}{changePercent}%
+            {changePercentValue > 0 ? '+' : ''}{changePercent}%
           </p>
         </div>
       </div>
