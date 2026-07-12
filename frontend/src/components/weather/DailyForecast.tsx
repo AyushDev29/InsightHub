@@ -207,13 +207,13 @@ export default function DailyForecast({
           },
           {
             label: 'Rainy Days',
-            value: `${processedData.filter(d => d.rainChance > 50).length}`,
+            value: `${processedData.filter(d => d.rainChance > 50).length}/${processedData.length}`,
             color: 'text-cyan-400',
           },
           {
-            label: 'Avg Humidity',
-            value: `—`,
-            color: 'text-gray-400',
+            label: 'Total Precipitation',
+            value: `${processedData.reduce((s: number, d: any) => s + d.precipitation, 0).toFixed(0)}mm`,
+            color: 'text-indigo-400',
           },
         ].map((stat) => (
           <div key={stat.label} className="card p-3">
