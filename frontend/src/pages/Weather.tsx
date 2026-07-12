@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { RefreshCw } from 'lucide-react'
 import CurrentWeather from '../components/weather/CurrentWeather'
+import HourlyForecast from '../components/weather/HourlyForecast'
+import DailyForecast from '../components/weather/DailyForecast'
 
 // ─── Cities ─────────────────────────────────────────────────────────────────
 
@@ -87,11 +89,31 @@ export default function Weather() {
         />
       </div>
 
+      {/* ── Hourly Forecast Section ────────────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Hourly Forecast</h2>
+        <HourlyForecast
+          latitude={selectedCity.lat}
+          longitude={selectedCity.lng}
+          hours={48}
+        />
+      </div>
+
+      {/* ── Daily Forecast Section ─────────────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Daily Forecast</h2>
+        <DailyForecast
+          latitude={selectedCity.lat}
+          longitude={selectedCity.lng}
+          days={16}
+        />
+      </div>
+
       {/* ── Placeholder sections for future components ──────────────────── */}
       <div className="text-center text-gray-400 py-12">
         <p className="text-sm">More sections coming soon...</p>
         <p className="text-xs text-gray-500 mt-2">
-          Hourly Forecast • Daily Forecast • Historical Data • Comparison • Statistics
+          Historical Data • Comparison • Statistics
         </p>
       </div>
     </div>
