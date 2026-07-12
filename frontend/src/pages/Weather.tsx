@@ -10,6 +10,7 @@ import { RefreshCw } from 'lucide-react'
 import CurrentWeather from '../components/weather/CurrentWeather'
 import HourlyForecast from '../components/weather/HourlyForecast'
 import DailyForecast from '../components/weather/DailyForecast'
+import HistoricalChart from '../components/weather/HistoricalChart'
 
 // ─── Cities ─────────────────────────────────────────────────────────────────
 
@@ -109,11 +110,20 @@ export default function Weather() {
         />
       </div>
 
+      {/* ── Historical Data Section ────────────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Historical Weather Data</h2>
+        <HistoricalChart
+          latitude={selectedCity.lat}
+          longitude={selectedCity.lng}
+        />
+      </div>
+
       {/* ── Placeholder sections for future components ──────────────────── */}
       <div className="text-center text-gray-400 py-12">
         <p className="text-sm">More sections coming soon...</p>
         <p className="text-xs text-gray-500 mt-2">
-          Historical Data • Comparison • Statistics
+          Comparison • Statistics
         </p>
       </div>
     </div>
