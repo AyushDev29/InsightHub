@@ -12,6 +12,7 @@ import HourlyForecast from '../components/weather/HourlyForecast'
 import DailyForecast from '../components/weather/DailyForecast'
 import HistoricalChart from '../components/weather/HistoricalChart'
 import ComparisonView from '../components/weather/ComparisonView'
+import WeatherStats from '../components/weather/WeatherStats'
 
 // ─── Cities ─────────────────────────────────────────────────────────────────
 
@@ -126,12 +127,13 @@ export default function Weather() {
         <ComparisonView />
       </div>
 
-      {/* ── Placeholder sections for future components ──────────────────── */}
-      <div className="text-center text-gray-400 py-12">
-        <p className="text-sm">More sections coming soon...</p>
-        <p className="text-xs text-gray-500 mt-2">
-          Statistics
-        </p>
+      {/* ── Weather Statistics Section ─────────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Weather Statistics & Insights</h2>
+        <WeatherStats
+          latitude={selectedCity.lat}
+          longitude={selectedCity.lng}
+        />
       </div>
     </div>
   )
