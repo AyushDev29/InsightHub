@@ -7,7 +7,7 @@ Every module (weather, earthquakes, traffic, crypto) can have data for any city.
 from sqlalchemy import Column, String, Integer, Numeric, Boolean, ForeignKey, CheckConstraint, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from app.db.base import BaseModel
+from app.db.base import BaseModel, GUID
 
 
 class City(BaseModel):
@@ -33,7 +33,7 @@ class City(BaseModel):
 
     __tablename__ = "cities"
 
-    country_id = Column(String(36), ForeignKey("countries.id"), nullable=False, index=True)
+    country_id = Column(GUID(), ForeignKey("countries.id"), nullable=False, index=True)
     name = Column(String(255), nullable=False, index=True)
     state = Column(String(100), nullable=True)
 
@@ -53,13 +53,13 @@ class City(BaseModel):
         "WeatherCurrent", back_populates="city", cascade="all, delete-orphan"
     )
     weather_hourly = relationship(
-        "WeatherHourly", back_populates="city", cascade="all, delete-orphan"
+        "WeatherHourly", back_populates="location", cascade="all, delete-orphan", foreign_keys="WeatherHourly.location_id", viewonly=True
     )
     weather_daily = relationship(
-        "WeatherDaily", back_populates="city", cascade="all, delete-orphan"
+        "WeatherDaily", back_populates="location", cascade="all, delete-orphan", foreign_keys="WeatherDaily.location_id", viewonly=True
     )
     weather_history = relationship(
-        "WeatherHistory", back_populates="city", cascade="all, delete-orphan"
+        "WeatherHistory", back_populates="location", cascade="all, delete-orphan", foreign_keys="WeatherHistory.location_id", viewonly=True
     )
     air_quality = relationship(
         "AirQuality", back_populates="city", cascade="all, delete-orphan"

@@ -5,7 +5,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
-import { Cloud, Wind, Droplets, Eye, Clock, Sun } from 'lucide-react'
+import { Cloud, Wind, Droplets, Eye, Clock } from 'lucide-react'
 import { apiService } from '../../services/api'
 import { WeatherData } from '../../types/api'
 
@@ -95,18 +95,9 @@ export default function CurrentWeather({
   const windDir = getWindDirection(weather.wind_direction_deg)
   const weatherEmoji = getWeatherEmoji(weather.weather_description)
 
-  // Parse sunrise/sunset times (they come as HH:MM)
-  const formatTime = (timeStr: string): string => {
-    try {
-      const [hours, minutes] = timeStr.split(':')
-      return `${hours}:${minutes}`
-    } catch {
-      return timeStr
-    }
-  }
-
-  const sunriseTime = formatTime(weather.visibility.toString())
-  const sunsetTime = formatTime(weather.visibility.toString())
+  // Parse sunrise/sunset times (not available in current endpoint, so we skip)
+  // Open-Meteo current endpoint doesn't include sunrise/sunset
+  // These would need to be calculated or fetched from daily forecast
 
   return (
     <div className="space-y-6">
@@ -205,26 +196,6 @@ export default function CurrentWeather({
             {weather.precipitation > 0 ? `${weather.precipitation.toFixed(1)} mm` : 'None'}
           </p>
           <p className="text-gray-500 text-xs mt-1">Current rainfall</p>
-        </div>
-
-        {/* Sunrise */}
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <Sun size={18} className="text-yellow-400" />
-            <p className="text-gray-400 text-xs uppercase tracking-wide">Sunrise</p>
-          </div>
-          <p className="text-2xl font-bold text-white">{sunriseTime}</p>
-          <p className="text-gray-500 text-xs mt-1">Morning time</p>
-        </div>
-
-        {/* Sunset */}
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <Sun size={18} className="text-orange-400" />
-            <p className="text-gray-400 text-xs uppercase tracking-wide">Sunset</p>
-          </div>
-          <p className="text-2xl font-bold text-white">{sunsetTime}</p>
-          <p className="text-gray-500 text-xs mt-1">Evening time</p>
         </div>
       </div>
     </div>

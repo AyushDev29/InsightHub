@@ -9,7 +9,9 @@ from app.schemas.weather import (
     WeatherHistoryResponse,
 )
 from app.schemas.aqi import AirQualityResponse
-from app.schemas.location import LocationResponse, LocationSearchResponse
+from app.schemas.location import CountryResponse, CityResponse, CityDetailResponse
+from app.schemas.current import CurrentDataResponse
+from app.schemas.module import ModuleResponse, ModuleUpdateRequest
 
 __all__ = [
     "WeatherCurrentResponse",
@@ -17,6 +19,10 @@ __all__ = [
     "WeatherDailyResponse",
     "WeatherHistoryResponse",
     "AirQualityResponse",
-    "LocationResponse",
-    "LocationSearchResponse",
+    "CountryResponse",
+    "CityResponse",
+    "CityDetailResponse",
+    "CurrentDataResponse",
+    "ModuleResponse",
+    "ModuleUpdateRequest",
 ]

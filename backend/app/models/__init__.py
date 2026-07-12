@@ -6,6 +6,7 @@ All SQLAlchemy ORM models for the application
 
 from app.models.country import Country
 from app.models.location import City, Location  # Location is alias for backward compatibility
+from app.models.module import DataModule
 from app.models.weather import WeatherCurrent
 from app.models.forecast import WeatherHourly, WeatherDaily, WeatherHistory
 from app.models.aqi import AirQuality
@@ -17,6 +18,7 @@ __all__ = [
     "Country",
     "City",
     "Location",  # Backward compatibility
+    "DataModule",
     "WeatherCurrent",
     "WeatherHourly",
     "WeatherDaily",

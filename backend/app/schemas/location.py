@@ -1,39 +1,49 @@
 """
-Location Pydantic Schemas
+Location Schemas - Country and City response models
 """
 
-from typing import Optional, List
+from typing import Optional
 from pydantic import BaseModel
-from uuid import UUID
+from datetime import datetime
 
 
-class LocationResponse(BaseModel):
-    """Location response schema"""
-    id: UUID
+class CountryResponse(BaseModel):
+    """Response schema for Country."""
+    id: str
     name: str
-    country: str
-    country_code: str
-    latitude: float
-    longitude: float
-    elevation: Optional[int] = None
-    timezone: Optional[str] = None
-    population: Optional[int] = None
-    
+    iso_code: str
+    continent: str
+    timezone: Optional[str]
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
     class Config:
         from_attributes = True
 
 
-class LocationSearchItem(BaseModel):
-    """Single location search result"""
+class CityResponse(BaseModel):
+    """Response schema for City (basic info)."""
+    id: str
     name: str
-    country: str
-    country_code: str
+    state: Optional[str]
     latitude: float
     longitude: float
-    population: Optional[int] = None
+    elevation: Optional[int]
+    population: Optional[int]
+    is_active: bool
+    is_favorite: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
 
 
-class LocationSearchResponse(BaseModel):
-    """Location search response schema"""
-    results: List[LocationSearchItem]
-    count: int
+class CityDetailResponse(CityResponse):
+    """Response schema for City with country details."""
+    country_id: str
+    timezone: Optional[str]
+    country: CountryResponse
+
+    class Config:
+        from_attributes = True

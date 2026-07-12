@@ -34,7 +34,7 @@ class WeatherHourly(BaseModel):
 
     fetched_at = Column(DateTime(timezone=True), nullable=False)
 
-    location = relationship("Location", back_populates="weather_hourly")
+    location = relationship("Location", foreign_keys=[location_id])
 
     __table_args__ = (
         CheckConstraint(
@@ -73,7 +73,7 @@ class WeatherDaily(BaseModel):
 
     fetched_at = Column(DateTime(timezone=True), nullable=False)
 
-    location = relationship("Location", back_populates="weather_daily")
+    location = relationship("Location", foreign_keys=[location_id])
 
     __table_args__ = (
         UniqueConstraint("location_id", "forecast_date", name="uq_weather_daily_loc_date"),
@@ -104,7 +104,7 @@ class WeatherHistory(BaseModel):
     weather_code     = Column(Integer,       nullable=True)
     weather_description = Column(String(255), nullable=True)
 
-    location = relationship("Location", back_populates="weather_history")
+    location = relationship("Location", foreign_keys=[location_id])
 
     __table_args__ = (
         CheckConstraint(

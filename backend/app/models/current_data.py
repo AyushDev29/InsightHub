@@ -13,9 +13,8 @@ Example:
 
 from sqlalchemy import Column, String, Integer, JSON, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
-from datetime import datetime, timezone
 
-from app.db.base import BaseModel
+from app.db.base import BaseModel, GUID
 
 
 class CurrentData(BaseModel):
@@ -35,7 +34,7 @@ class CurrentData(BaseModel):
 
     __tablename__ = "current_data"
 
-    city_id = Column(String(36), ForeignKey("cities.id"), nullable=False, index=True)
+    city_id = Column(GUID(), ForeignKey("cities.id"), nullable=False, index=True)
     module = Column(String(50), nullable=False, index=True)  # 'weather', 'aqi', etc
     data = Column(JSON, nullable=True)  # Module-specific data
     fetched_at = Column(Integer, nullable=True)  # Unix timestamp from API

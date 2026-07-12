@@ -47,7 +47,10 @@ function App() {
       <Router>
         <Routes>
           <Route element={<Layout />}>
+            {/* Main Dashboard */}
             <Route index element={<Dashboard />} />
+            
+            {/* Other pages */}
             <Route path="/city/:cityId" element={<CityDetails />} />
             <Route path="/weather" element={<Weather />} />
             <Route path="/air-quality" element={<AirQuality />} />

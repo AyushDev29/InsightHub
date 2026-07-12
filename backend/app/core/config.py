@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     
     APP_NAME: str = Field(default="InsightHub AI", description="Application name")
     APP_VERSION: str = Field(default="0.1.0", description="Application version")
-    ENVIRONMENT: str = Field(default="development", description="Environment (development, staging, production)")
+    ENVIRONMENT: str = Field(default="production", description="Environment (development, staging, production)")
     DEBUG: bool = Field(default=False, description="Debug mode")
     
     # ========================================================================
