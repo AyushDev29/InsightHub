@@ -7,6 +7,9 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { RefreshCw } from 'lucide-react'
 import AQIOverview from '../components/airquality/AQIOverview'
+import PollutantBreakdown from '../components/airquality/PollutantBreakdown'
+import HealthRecommendations from '../components/airquality/HealthRecommendations'
+import CityRanking from '../components/airquality/CityRanking'
 
 const CITIES = [
   { id: 'mumbai',    name: 'Mumbai',    lat: 19.0760, lng: 72.8777 },
@@ -79,12 +82,28 @@ export default function AirQuality() {
         />
       </div>
 
-      {/* ── Placeholder sections for future components ──────────────────── */}
-      <div className="text-center text-gray-400 py-12">
-        <p className="text-sm">More sections coming soon...</p>
-        <p className="text-xs text-gray-500 mt-2">
-          Pollutant Breakdown • Historical Trends • Health Recommendations • City Ranking
-        </p>
+      {/* ── Pollutant Breakdown Section ────────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Pollutant Breakdown</h2>
+        <PollutantBreakdown
+          latitude={selectedCity.lat}
+          longitude={selectedCity.lng}
+        />
+      </div>
+
+      {/* ── Health Recommendations Section ────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">Health Recommendations</h2>
+        <HealthRecommendations
+          latitude={selectedCity.lat}
+          longitude={selectedCity.lng}
+        />
+      </div>
+
+      {/* ── City Ranking Section ────────────────────────────────────────── */}
+      <div>
+        <h2 className="text-xl font-bold text-white mb-4">City Rankings</h2>
+        <CityRanking />
       </div>
     </div>
   )
