@@ -8,12 +8,12 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from app.db.base import BaseModel, GUID
+from app.db.base import BaseModel
 
 
 class AirQuality(BaseModel):
     """
-    Air quality measurement for a location at a point in time.
+    Air quality measurement for a city at a point in time.
 
     AQI scale used: European AQI (0 – 500).
     Pollutant concentrations are stored in µg/m³.
@@ -21,7 +21,7 @@ class AirQuality(BaseModel):
 
     __tablename__ = "air_quality"
 
-    location_id      = Column(GUID(), ForeignKey("locations.id", ondelete="CASCADE"), nullable=False, index=True)
+    city_id          = Column(String(36), ForeignKey("cities.id", ondelete="CASCADE"), nullable=False, index=True)
     measurement_time = Column(DateTime(timezone=True), nullable=False, index=True)
 
     # Index value + category
@@ -38,10 +38,15 @@ class AirQuality(BaseModel):
 
     fetched_at = Column(DateTime(timezone=True), nullable=False)
 
-    location = relationship("Location", back_populates="air_quality")
+    city = relationship("City", back_populates="air_quality")
+    
+    @property
+    def location(self):
+        """Backward compatibility alias."""
+        return self.city
 
     __table_args__ = (
-        UniqueConstraint("location_id", "measurement_time", name="uq_aqi_loc_time"),
+        UniqueConstraint("city_id", "measurement_time", name="uq_aqi_city_time"),
         CheckConstraint("aqi >= 0 AND aqi <= 500", name="ck_aqi"),
     )
 
@@ -61,4 +66,4 @@ class AirQuality(BaseModel):
         return "Air quality is Extremely Poor. Stay indoors and keep windows closed."
 
     def __repr__(self) -> str:
-        return f"<AirQuality(location_id={self.location_id}, aqi={self.aqi}, category={self.aqi_category})>"
+        return f"<AirQuality(city_id={self.city_id}, aqi={self.aqi}, category={self.aqi_category})>"

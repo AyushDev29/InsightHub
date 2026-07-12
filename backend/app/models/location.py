@@ -1,66 +1,83 @@
 """
-Location Model — stores city / location master data.
+City Model — stores city / location master data.
+Every city belongs to exactly one country.
+Every module (weather, earthquakes, traffic, crypto) can have data for any city.
 """
 
-from sqlalchemy import Column, String, Integer, Numeric, Boolean, CheckConstraint, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Numeric, Boolean, ForeignKey, CheckConstraint, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from app.db.base import BaseModel
 
 
-class Location(BaseModel):
+class City(BaseModel):
     """
-    Master table for every geographic location we track.
+    Master table for every city / location we track.
+    
+    Replaces the old 'Location' table with country-first design.
+    All modules reference this table, not hardcoded locations.
 
     Columns
     -------
-    name         : City / place name.
-    country      : Full country name.
-    country_code : ISO-3166-1 alpha-2 code (e.g. "US").
-    latitude     : -90 … +90.
-    longitude    : -180 … +180.
-    elevation    : Metres above sea level (nullable).
-    timezone     : IANA tz string e.g. "America/New_York".
-    population   : City population (nullable).
-    is_active    : Whether we actively fetch data for this location.
+    country_id    : Foreign key to Countries table
+    name          : City / place name
+    state         : State / province (nullable)
+    latitude      : -90 … +90
+    longitude     : -180 … +180
+    elevation     : Metres above sea level (nullable)
+    timezone      : IANA tz string (can override country default)
+    population    : City population (nullable)
+    is_active     : Whether we actively fetch data for this city
+    is_favorite   : User favorite flag
     """
 
-    __tablename__ = "locations"
+    __tablename__ = "cities"
 
-    name         = Column(String(255), nullable=False, index=True)
-    country      = Column(String(100), nullable=False)
-    country_code = Column(String(2),   nullable=False, index=True)
+    country_id = Column(String(36), ForeignKey("countries.id"), nullable=False, index=True)
+    name = Column(String(255), nullable=False, index=True)
+    state = Column(String(100), nullable=True)
 
-    latitude  = Column(Numeric(10, 7), nullable=False)
+    latitude = Column(Numeric(10, 7), nullable=False)
     longitude = Column(Numeric(10, 7), nullable=False)
-    elevation = Column(Integer,        nullable=True)
+    elevation = Column(Integer, nullable=True)
 
-    timezone   = Column(String(100), nullable=True)
-    population = Column(Integer,     nullable=True)
-    is_active  = Column(Boolean,     default=True, nullable=False, index=True)
+    timezone = Column(String(100), nullable=True)
+    population = Column(Integer, nullable=True)
+    is_active = Column(Boolean, default=True, nullable=False, index=True)
+    is_favorite = Column(Boolean, default=False, nullable=False, index=True)
 
     # Relationships
+    country = relationship("Country", back_populates="cities")
+    
     weather_current = relationship(
-        "WeatherCurrent", back_populates="location", cascade="all, delete-orphan"
+        "WeatherCurrent", back_populates="city", cascade="all, delete-orphan"
     )
     weather_hourly = relationship(
-        "WeatherHourly",  back_populates="location", cascade="all, delete-orphan"
+        "WeatherHourly", back_populates="city", cascade="all, delete-orphan"
     )
     weather_daily = relationship(
-        "WeatherDaily",   back_populates="location", cascade="all, delete-orphan"
+        "WeatherDaily", back_populates="city", cascade="all, delete-orphan"
     )
     weather_history = relationship(
-        "WeatherHistory", back_populates="location", cascade="all, delete-orphan"
+        "WeatherHistory", back_populates="city", cascade="all, delete-orphan"
     )
     air_quality = relationship(
-        "AirQuality",     back_populates="location", cascade="all, delete-orphan"
+        "AirQuality", back_populates="city", cascade="all, delete-orphan"
+    )
+    current_data = relationship(
+        "CurrentData", back_populates="city", cascade="all, delete-orphan"
     )
 
     __table_args__ = (
-        UniqueConstraint("latitude", "longitude", name="uq_location_coords"),
-        CheckConstraint("latitude  >= -90  AND latitude  <= 90",  name="ck_latitude"),
+        UniqueConstraint("latitude", "longitude", name="uq_city_coords"),
+        CheckConstraint("latitude  >= -90  AND latitude  <= 90", name="ck_latitude"),
         CheckConstraint("longitude >= -180 AND longitude <= 180", name="ck_longitude"),
     )
 
     def __repr__(self) -> str:
-        return f"<Location(name='{self.name}', country='{self.country_code}')>"
+        return f"<City(name='{self.name}', country_id='{self.country_id}')>"
+
+
+# Keep Location as alias for backward compatibility during migration
+Location = City
+

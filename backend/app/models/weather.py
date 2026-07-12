@@ -1,5 +1,5 @@
 """
-WeatherCurrent Model — real-time weather snapshot per location.
+WeatherCurrent Model — real-time weather snapshot per city.
 """
 
 from sqlalchemy import (
@@ -13,7 +13,7 @@ from app.db.base import BaseModel, GUID
 
 class WeatherCurrent(BaseModel):
     """
-    Stores the latest weather observation for a location.
+    Stores the latest weather observation for a city.
 
     All temperatures are Celsius, wind speed m/s, pressure hPa,
     precipitation mm, distances metres.
@@ -21,8 +21,8 @@ class WeatherCurrent(BaseModel):
 
     __tablename__ = "weather_current"
 
-    location_id = Column(
-        GUID(), ForeignKey("locations.id", ondelete="CASCADE"),
+    city_id = Column(
+        String(36), ForeignKey("cities.id", ondelete="CASCADE"),
         nullable=False, index=True
     )
 
@@ -59,15 +59,20 @@ class WeatherCurrent(BaseModel):
     # When this observation was taken (not when we stored it)
     observation_time = Column(DateTime(timezone=True), nullable=False, index=True)
 
-    # Relationship
-    location = relationship("Location", back_populates="weather_current")
+    # Relationship (backward compatible: 'location' alias for 'city')
+    city = relationship("City", back_populates="weather_current")
+    
+    @property
+    def location(self):
+        """Backward compatibility alias."""
+        return self.city
 
     __table_args__ = (
-        UniqueConstraint("location_id", "observation_time", name="uq_weather_current_loc_time"),
+        UniqueConstraint("city_id", "observation_time", name="uq_weather_current_city_time"),
         CheckConstraint("temperature >= -100 AND temperature <= 60", name="ck_temperature"),
         CheckConstraint("humidity    >= 0    AND humidity    <= 100", name="ck_humidity"),
         CheckConstraint("cloudiness  >= 0    AND cloudiness  <= 100", name="ck_cloudiness"),
     )
 
     def __repr__(self) -> str:
-        return f"<WeatherCurrent(location_id={self.location_id}, temp={self.temperature}°C)>"
+        return f"<WeatherCurrent(city_id={self.city_id}, temp={self.temperature}°C)>"
