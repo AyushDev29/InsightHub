@@ -103,6 +103,7 @@ async def get_current_weather(
     cur = raw.get("current", {})
 
     weather_code = cur.get("weather_code")
+    temp = cur.get("temperature_2m") or 0  # Provide defaults
 
     return {
         "success": True,
@@ -111,22 +112,22 @@ async def get_current_weather(
             "latitude":         latitude,
             "longitude":        longitude,
             # Temperatures
-            "temperature":              cur.get("temperature_2m"),
-            "feels_like":               cur.get("apparent_temperature"),
-            # Atmosphere
-            "humidity":                 cur.get("relative_humidity_2m"),
-            "pressure":                 cur.get("surface_pressure"),
-            "visibility":               cur.get("visibility"),
-            "cloudiness":               cur.get("cloud_cover"),
+            "temperature":              temp,
+            "feels_like":               cur.get("apparent_temperature") or temp,
+            # Atmosphere - provide defaults if missing from API
+            "humidity":                 cur.get("relative_humidity_2m") or 0,
+            "pressure":                 cur.get("surface_pressure") or 1013,
+            "visibility":               cur.get("visibility") or 10000,
+            "cloudiness":               cur.get("cloud_cover") or 0,
             # Wind
-            "wind_speed":               cur.get("wind_speed_10m"),
-            "wind_direction_deg":       cur.get("wind_direction_10m"),
-            "wind_direction_label":     wind_direction_label(cur.get("wind_direction_10m")),
-            "wind_gust":                cur.get("wind_gusts_10m"),
+            "wind_speed":               cur.get("wind_speed_10m") or 0,
+            "wind_direction_deg":       cur.get("wind_direction_10m") or 0,
+            "wind_direction_label":     wind_direction_label(cur.get("wind_direction_10m") or 0),
+            "wind_gust":                cur.get("wind_gusts_10m") or 0,
             # Precipitation
-            "precipitation":            cur.get("precipitation"),
-            "rain":                     cur.get("rain"),
-            "snow":                     cur.get("snowfall"),
+            "precipitation":            cur.get("precipitation") or 0,
+            "rain":                     cur.get("rain") or 0,
+            "snow":                     cur.get("snowfall") or 0,
             # Condition
             "weather_code":             weather_code,
             "weather_description":      describe_wmo(weather_code),

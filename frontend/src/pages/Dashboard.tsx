@@ -158,13 +158,26 @@ export default function Dashboard() {
 
   const chartData = useMemo(() => {
     if (!hourlyRaw?.forecasts) return []
-    return (hourlyRaw.forecasts as any[]).slice(0, 24).map((h: any) => ({
-      time:        new Date(h.forecast_time).getHours() + ':00',
-      temp:        h.temperature   != null ? +h.temperature.toFixed(1)   : null,
-      humidity:    h.humidity      != null ? +h.humidity.toFixed(0)      : null,
-      wind:        h.wind_speed    != null ? +(h.wind_speed * 3.6).toFixed(1) : null, // m/s → km/h
-      rain_prob:   h.precipitation_probability ?? null,
-    }))
+    return (hourlyRaw.forecasts as any[]).slice(0, 24).map((h: any) => {
+      try {
+        const time = h.forecast_time ? new Date(h.forecast_time).getHours() : 0
+        return {
+          time:        (time || 0).toString().padStart(2, '0') + ':00',
+          temp:        h.temperature   != null ? +h.temperature.toFixed(1)   : null,
+          humidity:    h.humidity      != null ? +h.humidity.toFixed(0)      : null,
+          wind:        h.wind_speed    != null ? +(h.wind_speed * 3.6).toFixed(1) : null,
+          rain_prob:   h.precipitation_probability ?? null,
+        }
+      } catch {
+        return {
+          time: '00:00',
+          temp: null,
+          humidity: null,
+          wind: null,
+          rain_prob: null,
+        }
+      }
+    })
   }, [hourlyRaw])
 
   // ── Last updated label ────────────────────────────────────────────────────
