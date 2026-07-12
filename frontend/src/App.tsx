@@ -6,6 +6,7 @@ import CityDetails from './pages/CityDetails'
 import Weather from './pages/Weather'
 import AirQuality from './pages/AirQuality'
 import Analytics from './pages/Analytics'
+import GeoIntelligence from './pages/GeoIntelligence'
 import './styles/globals.css'
 
 // Simple placeholder component for unimplemented pages
@@ -50,8 +51,9 @@ function App() {
             <Route path="/city/:cityId" element={<CityDetails />} />
             <Route path="/weather" element={<Weather />} />
             <Route path="/air-quality" element={<AirQuality />} />
-          <Route path="/analytics" element={<Analytics />} />
-            <Route path="/maps" element={<ComingSoon />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/geo-intelligence" element={<GeoIntelligence />} />
+            <Route path="/maps" element={<GeoIntelligence />} />
             <Route path="/data-explorer" element={<ComingSoon />} />
             <Route path="/settings" element={<ComingSoon />} />
           </Route>

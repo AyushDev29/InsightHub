@@ -11,25 +11,30 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@react-leaflet/core": "^3.0.0",
+    "@tanstack/react-query": "^5.51.23",
+    "@types/leaflet": "^1.9.21",
+    "axios": "^1.7.7",
+    "heat": "^0.0.5",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.445.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^6.27.0",
-    "@tanstack/react-query": "^5.51.23",
-    "axios": "^1.7.7",
-    "recharts": "^2.14.5",
-    "lucide-react": "^0.445.0"
+    "recharts": "^2.14.5"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.8",
-    "tailwindcss": "^3.4.15",
-    "postcss": "^8.4.47",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.16.0",
-    "@typescript-eslint/eslint-plugin": "^8.16.0",
-    "@typescript-eslint/parser": "^8.16.0"
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.8"
   }
 }
