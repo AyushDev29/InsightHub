@@ -55,7 +55,7 @@ class Settings(BaseSettings):
     # ========================================================================
     
     CORS_ORIGINS: List[str] = Field(
-        default=["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+        default=["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://datamind-71f46.web.app"],
         description="Allowed CORS origins"
     )
     CORS_ALLOW_CREDENTIALS: bool = Field(default=True, description="Allow credentials")
