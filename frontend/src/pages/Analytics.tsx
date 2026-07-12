@@ -7,6 +7,7 @@
 import { useState, useMemo } from 'react'
 import { BarChart3, TrendingUp, AlertTriangle, Zap, Zap as Spark } from 'lucide-react'
 import TrendAnalysis from '../components/analytics/TrendAnalysis'
+import AnomalyDetector from '../components/analytics/AnomalyDetector'
 
 interface Tab {
   id: string
@@ -76,21 +77,7 @@ export default function Analytics() {
 
       case 'anomalies':
         return (
-          <div className="space-y-4">
-            <div className="card p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <AlertTriangle className="text-orange-400" size={20} />
-                <h3 className="text-lg font-semibold text-white">Anomaly Detection</h3>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Monitoring: <span className="text-primary-400 font-medium">{cities}</span>
-              </p>
-              <div className="bg-dark-700/50 rounded border border-dark-600 p-8 text-center">
-                <p className="text-gray-500 mb-4">⚠️ Anomaly detection component loading...</p>
-                <p className="text-xs text-gray-600">Detects extreme temperatures, AQI spikes, humidity anomalies, and wind changes</p>
-              </div>
-            </div>
-          </div>
+          <AnomalyDetector cities={selectedCities} />
         )
 
       case 'predictions':
