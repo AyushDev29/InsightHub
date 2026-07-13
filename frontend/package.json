@@ -18,6 +18,7 @@
     "@types/leaflet": "^1.9.21",
     "axios": "^1.7.7",
     "firebase": "^10.7.0",
+    "framer-motion": "^12.42.2",
     "heat": "^0.0.5",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.445.0",

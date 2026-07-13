@@ -1,4 +1,4 @@
-import { Cloud, Gauge, Map, BarChart3, Settings, X } from 'lucide-react'
+import { Cloud, Gauge, Map, BarChart3, Settings, X, TrendingUp, Home } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 interface SidebarProps {
@@ -6,21 +6,44 @@ interface SidebarProps {
   onToggle: () => void
 }
 
-const menuItems = [
-  { icon: Gauge, label: 'Dashboard', href: '/', end: true },
-  { icon: Cloud, label: 'Weather', href: '/weather', end: false },
-  { icon: Cloud, label: 'Air Quality', href: '/air-quality', end: false },
-  { icon: BarChart3, label: 'Analytics', href: '/analytics', end: false },
-  { icon: Map, label: 'Maps', href: '/maps', end: false },
-  { icon: Cloud, label: 'Data Explorer', href: '/data-explorer', end: false },
+// Weather module menu
+const weatherMenuItems = [
+  { icon: Home, label: 'Return to Hub', href: '/', end: true },
+  { icon: Gauge, label: 'Dashboard', href: '/dashboard', end: true },
+  { icon: Cloud, label: 'Weather', href: '/weather', end: true },
+  { icon: Cloud, label: 'Air Quality', href: '/air-quality', end: true },
+  { icon: BarChart3, label: 'Analytics', href: '/analytics', end: true },
+  { icon: Map, label: 'Maps', href: '/maps', end: true },
+]
+
+// Finance module menu
+const financeMenuItems = [
+  { icon: Home, label: 'Return to Hub', href: '/', end: true },
+  { icon: BarChart3, label: 'Overview', href: '/finance', end: true },
+  { icon: Cloud, label: 'Stocks', href: '/finance/stocks', end: true },
+  { icon: TrendingUp, label: 'Cryptocurrency', href: '/finance/crypto', end: true },
+  { icon: TrendingUp, label: 'Forex', href: '/finance/forex', end: true },
+  { icon: Cloud, label: 'Commodities', href: '/finance/commodities', end: true },
+  { icon: BarChart3, label: 'Analytics', href: '/finance/analytics', end: true },
 ]
 
 const bottomItems = [
-  { icon: Settings, label: 'Settings', href: '/settings', end: false },
+  { icon: Settings, label: 'Settings', href: '/settings', end: true },
 ]
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const location = useLocation()
+
+  // Determine which module we're in
+  const isFinanceModule = location.pathname.startsWith('/finance')
+  const isWeatherModule = location.pathname.startsWith('/dashboard') || 
+                          location.pathname.startsWith('/weather') || 
+                          location.pathname.startsWith('/air-quality') ||
+                          location.pathname.startsWith('/analytics') ||
+                          location.pathname.startsWith('/maps') ||
+                          location.pathname.startsWith('/city')
+
+  const currentMenuItems = isFinanceModule ? financeMenuItems : (isWeatherModule ? weatherMenuItems : [])
 
   const isActive = (href: string, end: boolean) => {
     if (end) return location.pathname === href
@@ -64,7 +87,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
         {/* Main Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-          {menuItems.map((item) => {
+          {currentMenuItems.map((item) => {
             const Icon = item.icon
             const active = isActive(item.href, item.end)
             return (

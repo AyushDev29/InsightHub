@@ -6,7 +6,7 @@ Aggregates all API v1 endpoints
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import weather, locations, current, modules
+from app.api.v1.endpoints import weather, locations, current, modules, financial
 
 # Create API router
 api_router = APIRouter()
@@ -16,6 +16,7 @@ api_router.include_router(weather.router)
 api_router.include_router(locations.router)
 api_router.include_router(current.router)
 api_router.include_router(modules.router)
+api_router.include_router(financial.router)
 
 # Add more routers here as they are created
 # api_router.include_router(analytics.router)

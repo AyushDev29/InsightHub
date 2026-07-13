@@ -152,6 +152,25 @@ class Settings(BaseSettings):
     DEFAULT_PAGE_SIZE: int = Field(default=20, description="Default pagination size")
     MAX_PAGE_SIZE: int = Field(default=100, description="Maximum pagination size")
     
+    # ========================================================================
+    # FINANCIAL INTELLIGENCE APIs
+    # ========================================================================
+    
+    TWELVEDATA_API_KEY: str | None = Field(default="demo", description="Twelve Data API key")
+    NEWSAPI_KEY: str | None = Field(default="demo", description="NewsAPI key")
+    COINGECKO_API_URL: str = Field(
+        default="https://api.coingecko.com/api/v3",
+        description="CoinGecko API base URL"
+    )
+    FRANKFURTER_API_URL: str = Field(
+        default="https://api.frankfurter.app",
+        description="Frankfurter Forex API base URL"
+    )
+    FEARGREED_API_URL: str = Field(
+        default="https://api.alternative.me/fng",
+        description="Fear & Greed Index API base URL"
+    )
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

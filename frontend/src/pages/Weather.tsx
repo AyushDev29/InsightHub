@@ -4,7 +4,7 @@
  * historical data, comparison, and statistics.
  */
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { RefreshCw } from 'lucide-react'
 import CurrentWeather from '../components/weather/CurrentWeather'
