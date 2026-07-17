@@ -68,7 +68,7 @@ interface Fundamentals {
 
 // For production, update this to your Railway backend URL
 // Example: 'https://your-railway-backend.up.railway.app/api/v1'
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+const API_URL = import.meta.env.VITE_API_URL || 'https://insighthub-production-4b27.up.railway.app/api/v1'
 
 export default function StockDetail() {
   const { symbol } = useParams<{ symbol: string }>()
