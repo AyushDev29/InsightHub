@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader } from 'lucide-react'
+import { ArrowLeft, Loader, Clock } from 'lucide-react'
 import {
   ComposedChart,
   BarChart,
@@ -66,7 +66,9 @@ interface Fundamentals {
   price: number
 }
 
-const API_URL = 'http://localhost:8000/api/v1'
+// For production, update this to your Railway backend URL
+// Example: 'https://your-railway-backend.up.railway.app/api/v1'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
 export default function StockDetail() {
   const { symbol } = useParams<{ symbol: string }>()
@@ -80,6 +82,7 @@ export default function StockDetail() {
   const [chartType, setChartType] = useState<'candlestick' | 'line' | 'area'>('candlestick')
   const [daysRange, setDaysRange] = useState(30)
   const [watchlist, setWatchlist] = useState<boolean>(false)
+  const [autoRefreshState, setAutoRefreshState] = useState({ marketOpen: false, refreshing: false })
 
   useEffect(() => {
     if (symbol) loadStockData()
@@ -120,6 +123,48 @@ export default function StockDetail() {
     }
   }
 
+  // Setup auto-refresh based on market hours
+  useEffect(() => {
+    if (!stock) return
+
+    const checkAndRefresh = async () => {
+      const now = new Date()
+      let marketOpen = false
+
+      if (stock.exchange === 'NSE') {
+        // India: 09:15 - 15:30 IST
+        const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }))
+        const istHours = istTime.getHours()
+        const istMinutes = istTime.getMinutes()
+        const istDay = istTime.getDay()
+        marketOpen = istDay !== 0 && istDay !== 6 && istHours >= 9 && (istHours < 15 || (istHours === 15 && istMinutes < 30))
+      } else {
+        // US: 09:30 - 16:00 EST/EDT
+        const estTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }))
+        const estHours = estTime.getHours()
+        const estMinutes = estTime.getMinutes()
+        const estDay = estTime.getDay()
+        marketOpen = estDay !== 0 && estDay !== 6 && estHours >= 9 && (estHours < 16 || (estHours === 9 && estMinutes < 30))
+      }
+
+      setAutoRefreshState(prev => ({ ...prev, marketOpen }))
+
+      if (marketOpen) {
+        setAutoRefreshState(prev => ({ ...prev, refreshing: true }))
+        await loadStockData()
+        setAutoRefreshState(prev => ({ ...prev, refreshing: false }))
+      }
+    }
+
+    // Initial check
+    checkAndRefresh()
+
+    // Set up interval for every 60 seconds
+    const interval = setInterval(checkAndRefresh, 60000)
+
+    return () => clearInterval(interval)
+  }, [stock?.exchange])
+
   if (loading || !stock) {
     return (
       <div className="min-h-screen bg-dark-900 p-6 flex items-center justify-center">
@@ -151,6 +196,15 @@ export default function StockDetail() {
         onWatchlistToggle={() => setWatchlist(!watchlist)} 
         onRefresh={loadStockData}
       />
+
+      {/* Auto-refresh Status Indicator */}
+      {autoRefreshState.marketOpen && (
+        <div className="bg-gradient-to-r from-green-900/20 to-green-800/10 border border-green-600/30 rounded-lg p-3 flex items-center gap-2 text-green-400 text-sm">
+          <Clock size={16} />
+          <span>Market is open • Auto-refreshing every 60s</span>
+          {autoRefreshState.refreshing && <Loader size={16} className="ml-auto animate-spin" />}
+        </div>
+      )}
 
       {/* Tabs - Professional Style */}
       <div className="flex items-center gap-8 border-b border-dark-600 sticky top-0 bg-dark-900 z-10 -mx-6 px-6 py-4">

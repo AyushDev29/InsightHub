@@ -162,8 +162,9 @@ export default function StatisticsDashboard({
 
   if (!statistics) {
     return (
-      <div className="card p-8 text-center">
-        <p className="text-gray-400">Unable to compute statistics</p>
+      <div className="card p-8 text-center space-y-3">
+        <p className="text-gray-300 font-semibold">Statistics Unavailable</p>
+        <p className="text-gray-500 text-sm">The backend API is not currently available. Please check again later or deploy the backend to Railway.</p>
       </div>
     )
   }

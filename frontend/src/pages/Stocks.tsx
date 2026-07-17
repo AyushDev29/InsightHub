@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, TrendingUp, TrendingDown, Star, RefreshCw, X, Loader } from 'lucide-react'
+import { Search, TrendingUp, TrendingDown, Star, RefreshCw, X, Loader, Clock } from 'lucide-react'
 
 interface Stock {
   symbol: string
@@ -20,7 +20,9 @@ interface Stock {
   pe: number
 }
 
-const API_URL = 'http://localhost:8000/api/v1'
+// For production, update this to your Railway backend URL
+// Example: 'https://your-railway-backend.up.railway.app/api/v1'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
 export default function Stocks() {
   const navigate = useNavigate()
@@ -35,6 +37,46 @@ export default function Stocks() {
   const [watchlist, setWatchlist] = useState<string[]>([])
   const [marketFilter, setMarketFilter] = useState<'all' | 'india' | 'global'>('all')
   const [activeTab, setActiveTab] = useState<'discover' | 'gainers' | 'losers' | 'active' | 'trending'>('discover')
+  const [autoRefreshState, setAutoRefreshState] = useState({ nseOpen: false, nasdaqOpen: false, refreshing: false, lastRefresh: null as Date | null })
+
+  // Get market status based on current time and exchange
+  const getMarketStatus = (exchange: string) => {
+    const now = new Date()
+    
+    if (exchange === 'NSE') {
+      // India: 09:15 - 15:30 IST
+      const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }))
+      const hours = istTime.getHours()
+      const minutes = istTime.getMinutes()
+      const day = istTime.getDay()
+      
+      const isWeekend = day === 0 || day === 6
+      const isOpen = !isWeekend && hours >= 9 && (hours < 15 || (hours === 15 && minutes < 30))
+      
+      return {
+        status: isOpen ? 'OPEN' : 'CLOSED',
+        text: isOpen ? '🟢 OPEN' : '🔴 CLOSED',
+        color: isOpen ? 'text-green-400' : 'text-red-400'
+      }
+    } else if (exchange === 'NASDAQ') {
+      // US: 09:30 - 16:00 EST/EDT
+      const estTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }))
+      const hours = estTime.getHours()
+      const minutes = estTime.getMinutes()
+      const day = estTime.getDay()
+      
+      const isWeekend = day === 0 || day === 6
+      const isOpen = !isWeekend && hours >= 9 && (hours < 16 || (hours === 9 && minutes < 30))
+      
+      return {
+        status: isOpen ? 'OPEN' : 'CLOSED',
+        text: isOpen ? '🟢 OPEN' : '🔴 CLOSED',
+        color: isOpen ? 'text-green-400' : 'text-red-400'
+      }
+    }
+    
+    return { status: 'UNKNOWN', text: '⚫ UNKNOWN', color: 'text-gray-400' }
+  }
 
   // Load market movers on mount
   useEffect(() => {
@@ -114,6 +156,48 @@ export default function Stocks() {
     return exchange === 'NSE' ? '₹' : '$'
   }
 
+  // Setup auto-refresh for both markets
+  useEffect(() => {
+    // Check market status and set up polling intervals
+    const checkAndRefresh = async () => {
+      const now = new Date()
+      
+      // Check NSE (India)
+      const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }))
+      const istHours = istTime.getHours()
+      const istMinutes = istTime.getMinutes()
+      const istDay = istTime.getDay()
+      const nseOpen = istDay !== 0 && istDay !== 6 && istHours >= 9 && (istHours < 15 || (istHours === 15 && istMinutes < 30))
+
+      // Check NASDAQ (US)
+      const estTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }))
+      const estHours = estTime.getHours()
+      const estMinutes = estTime.getMinutes()
+      const estDay = estTime.getDay()
+      const nasdaqOpen = estDay !== 0 && estDay !== 6 && estHours >= 9 && (estHours < 16 || (estHours === 9 && estMinutes < 30))
+
+      setAutoRefreshState(prev => ({
+        ...prev,
+        nseOpen,
+        nasdaqOpen
+      }))
+
+      if (nseOpen || nasdaqOpen) {
+        setAutoRefreshState(prev => ({ ...prev, refreshing: true }))
+        await loadInitialData()
+        setAutoRefreshState(prev => ({ ...prev, refreshing: false, lastRefresh: new Date() }))
+      }
+    }
+
+    // Initial check
+    checkAndRefresh()
+
+    // Set up interval to check every 60 seconds
+    const interval = setInterval(checkAndRefresh, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   // Stock card component
   const StockCard = ({ stock, compact = false }: { stock: Stock; compact?: boolean }) => {
     const isPositive = stock.changePercent >= 0
@@ -169,9 +253,15 @@ export default function Stocks() {
         <div>
           <h1 className="text-4xl font-bold text-white">Stock Intelligence</h1>
           <p className="text-gray-400 mt-2">Professional stock market analysis & discovery</p>
+          {(autoRefreshState.nseOpen || autoRefreshState.nasdaqOpen) && (
+            <p className="text-sm text-green-400 mt-2 flex items-center gap-1">
+              <Clock size={14} />
+              Auto-refreshing every 60s • Last update: {autoRefreshState.lastRefresh?.toLocaleTimeString() || 'loading'}
+            </p>
+          )}
         </div>
-        <button onClick={loadInitialData} className="p-2 rounded hover:bg-dark-700 transition-colors">
-          <RefreshCw size={24} className="text-primary-400" />
+        <button onClick={loadInitialData} className="p-2 rounded hover:bg-dark-700 transition-colors" disabled={autoRefreshState.refreshing}>
+          <RefreshCw size={24} className={`${autoRefreshState.refreshing ? 'animate-spin' : ''} text-primary-400`} />
         </button>
       </div>
 
@@ -268,10 +358,20 @@ export default function Stocks() {
                   {/* INDIAN STOCKS SECTION */}
                   {(marketFilter === 'all' || marketFilter === 'india') && (
                     <div className="border-t border-dark-600 pt-6">
-                      <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span>🇮🇳 Indian Markets (NSE)</span>
-                        <span className="text-sm text-gray-400 font-normal">Rupee (₹)</span>
-                      </h2>
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                          <span>🇮🇳 Indian Markets (NSE)</span>
+                          <span className="text-sm text-gray-400 font-normal">Rupee (₹)</span>
+                        </h2>
+                        <div className="flex items-center gap-3">
+                          <div className={`text-sm font-semibold ${getMarketStatus('NSE').color} px-3 py-1 bg-dark-700 rounded flex items-center gap-2`}>
+                            {getMarketStatus('NSE').text}
+                            {autoRefreshState.nseOpen && autoRefreshState.refreshing && (
+                              <Loader size={14} className="animate-spin" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
 
                       <div>
                         <h3 className="text-lg font-bold text-white mb-4">🏆 Top Gainers</h3>
@@ -305,10 +405,20 @@ export default function Stocks() {
                   {/* GLOBAL STOCKS SECTION */}
                   {(marketFilter === 'all' || marketFilter === 'global') && (
                     <div className="border-t border-dark-600 pt-6">
-                      <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span>🌎 Global Markets (NASDAQ)</span>
-                        <span className="text-sm text-gray-400 font-normal">Dollar ($)</span>
-                      </h2>
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                          <span>🌎 Global Markets (NASDAQ)</span>
+                          <span className="text-sm text-gray-400 font-normal">Dollar ($)</span>
+                        </h2>
+                        <div className="flex items-center gap-3">
+                          <div className={`text-sm font-semibold ${getMarketStatus('NASDAQ').color} px-3 py-1 bg-dark-700 rounded flex items-center gap-2`}>
+                            {getMarketStatus('NASDAQ').text}
+                            {autoRefreshState.nasdaqOpen && autoRefreshState.refreshing && (
+                              <Loader size={14} className="animate-spin" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
 
                       <div>
                         <h3 className="text-lg font-bold text-white mb-4">📈 Top Gainers</h3>

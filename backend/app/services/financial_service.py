@@ -665,24 +665,54 @@ class FinancialService:
     # MARKET STATUS & CALENDAR
     # =========================================================================
 
-    async def get_market_status(self) -> Dict[str, Any]:
+    async def get_market_status(self, exchange: str = "NSE") -> Dict[str, Any]:
         """
-        Determine if markets are open or closed.
-        Returns: market status, time until open/close, holidays
+        Determine if markets are open or closed for specific exchange.
+        exchange: "NSE" (India) or "NASDAQ" (US)
+        Returns: market status, time until open/close for the specific market
         """
-        now = datetime.now()
+        from datetime import datetime, timezone
+        import pytz
+        
+        if exchange == "NSE":
+            # Indian market (NSE): 09:15 - 15:30 IST, Monday-Friday
+            tz = pytz.timezone('Asia/Kolkata')
+            now = datetime.now(tz)
+            market_open_hour = 9
+            market_open_minute = 15
+            market_close_hour = 15
+            market_close_minute = 30
+        elif exchange == "NASDAQ":
+            # US market (NASDAQ): 09:30 - 16:00 EST/EDT, Monday-Friday
+            tz = pytz.timezone('America/New_York')
+            now = datetime.now(tz)
+            market_open_hour = 9
+            market_open_minute = 30
+            market_close_hour = 16
+            market_close_minute = 0
+        else:
+            # Default to NSE
+            tz = pytz.timezone('Asia/Kolkata')
+            now = datetime.now(tz)
+            market_open_hour = 9
+            market_open_minute = 15
+            market_close_hour = 15
+            market_close_minute = 30
+
         current_hour = now.hour
+        current_minute = now.minute
         current_day = now.weekday()  # 0=Monday, 6=Sunday
-
-        # Indian market hours: 09:15 - 15:30 IST, Monday-Friday
-        market_open_hour = 9
-        market_close_hour = 15
-        market_close_minute = 30
-
+        
         is_weekend = current_day >= 5  # Saturday or Sunday
+        
+        # Check if current time is within market hours
+        current_time_minutes = current_hour * 60 + current_minute
+        market_open_minutes = market_open_hour * 60 + market_open_minute
+        market_close_minutes = market_close_hour * 60 + market_close_minute
+        
         is_open = (
             not is_weekend
-            and market_open_hour <= current_hour < market_close_hour
+            and market_open_minutes <= current_time_minutes < market_close_minutes
         )
 
         if is_open:
@@ -701,7 +731,7 @@ class FinancialService:
             else:
                 days_until_open = 1
 
-            next_open = now.replace(hour=market_open_hour, minute=15, second=0) + timedelta(
+            next_open = now.replace(hour=market_open_hour, minute=market_open_minute, second=0) + timedelta(
                 days=days_until_open
             )
             time_until_open = (next_open - now).total_seconds() / 3600  # in hours
@@ -713,6 +743,8 @@ class FinancialService:
             "status": status,
             "next_event": next_event,
             "current_time": now.isoformat(),
+            "exchange": exchange,
+            "timezone": str(tz),
         }
 
     # =========================================================================

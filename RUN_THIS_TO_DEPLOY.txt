@@ -1,0 +1,75 @@
+====================================================================
+DEPLOY STOCK INTELLIGENCE PLATFORM - SIMPLE STEPS
+====================================================================
+
+STEP 1: Open a NEW PowerShell/Terminal Window
+====================================================================
+- Press: Windows Key + R
+- Type: powershell
+- Press: Enter
+
+This opens a NEW terminal window.
+
+
+STEP 2: Navigate to Project
+====================================================================
+Copy and paste this into the terminal:
+
+cd "c:\projects\data analust project\InsightHub-AI"
+
+Press Enter
+
+
+STEP 3: Login to Firebase
+====================================================================
+Copy and paste this into the terminal:
+
+firebase login
+
+Press Enter
+
+A browser window will automatically open asking you to sign in.
+
+
+STEP 4: Sign In (In Browser)
+====================================================================
+- Email: officialayush292006@gmail.com
+- Password: [your password]
+- Click "Allow" when asked for Firebase CLI permission
+- Close the browser tab after it says "You are now logged in"
+
+
+STEP 5: Deploy Frontend to Firebase
+====================================================================
+Back in the terminal, copy and paste:
+
+firebase deploy --only hosting
+
+This will upload your frontend to Firebase Hosting
+Takes: ~2-3 minutes
+
+You'll see:
+  ✔  hosting[datamind-71f46]: file uploading complete
+  ✔  hosting[datamind-71f46]: released and live!
+  
+Live at: https://datamind-71f46.web.app
+
+
+STEP 6: Deploy Backend to Railway (Optional for now)
+====================================================================
+Go to: https://railway.app/dashboard
+Login with GitHub
+Select your project
+Select backend service
+Click "Redeploy Latest"
+Wait 5-10 minutes
+
+
+====================================================================
+That's it! Your platform is now live! 🎉
+====================================================================
+
+Frontend:  https://datamind-71f46.web.app
+Backend:   (gets URL from Railway dashboard)
+
+Go try it out in your browser!

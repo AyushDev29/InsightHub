@@ -1,0 +1,30 @@
+FIREBASE LOGIN INSTRUCTIONS
+============================
+
+1. A firebase login terminal is now running
+
+2. You should see a URL that looks like:
+   https://accounts.google.com/o/oauth2/auth?...
+
+3. COPY that URL and open it in your web browser
+
+4. When prompted to sign in, use:
+   Email: officialayush292006@gmail.com
+   Password: [your password]
+
+5. Click "Allow" when asked to authorize Firebase CLI
+
+6. The browser will show a confirmation code
+
+7. Copy that code back to the terminal (if prompted) or the terminal 
+   will automatically proceed
+
+8. Once authenticated, the terminal will show:
+   ✔ Success! Logged in as officialayush292006@gmail.com
+
+9. Then deployment will start automatically!
+
+The terminal window with firebase login should still be open.
+Follow these steps in your web browser to complete login.
+
+After login, it will proceed to deploy to Firebase automatically.

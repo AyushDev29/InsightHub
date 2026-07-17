@@ -180,17 +180,21 @@ async def get_market_overview() -> Dict[str, Any]:
 # =========================================================================
 
 @router.get("/market-status", response_model=MarketStatusResponse, summary="Get Market Status")
-async def get_market_status() -> MarketStatusResponse:
+async def get_market_status(exchange: str = Query("NSE", regex="^(NSE|NASDAQ)$")) -> MarketStatusResponse:
     """
-    Check if markets are open or closed.
+    Check if markets are open or closed for a specific exchange.
+    
+    Parameters:
+    - exchange: "NSE" (India, default) or "NASDAQ" (US)
     
     Returns:
     - status: OPEN, CLOSED, or HOLIDAY
-    - next_event: Time until market opens/closes
-    - current_time: Server time (IST)
+    - next_event: Time until market opens/closes for the specific exchange
+    - current_time: Server time
+    - exchange: Which market (NSE or NASDAQ)
     """
     try:
-        status_data = await financial_service.get_market_status()
+        status_data = await financial_service.get_market_status(exchange=exchange)
         return MarketStatusResponse(
             status=status_data["status"],
             next_event=status_data["next_event"],
